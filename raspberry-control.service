@@ -1,0 +1,16 @@
+[Unit]
+Description=Raspberry Pi Control Panel Web Server
+After=network.target
+
+[Service]
+Type=simple
+User=andrew
+WorkingDirectory=/home/andrew/Desktop/cstest/nocluee/ConsoleApp1
+ExecStart=/bin/bash "/home/andrew/Desktop/cstest/nocluee/ConsoleApp1/update-and-run.sh"
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

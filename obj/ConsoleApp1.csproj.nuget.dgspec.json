@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "/home/andrew/Desktop/cs test/nocluee/ConsoleApp1/ConsoleApp1.csproj": {}
+    "/home/andrew/Desktop/cstest/nocluee/ConsoleApp1/ConsoleApp1.csproj": {}
   },
   "projects": {
-    "/home/andrew/Desktop/cs test/nocluee/ConsoleApp1/ConsoleApp1.csproj": {
+    "/home/andrew/Desktop/cstest/nocluee/ConsoleApp1/ConsoleApp1.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/andrew/Desktop/cs test/nocluee/ConsoleApp1/ConsoleApp1.csproj",
+        "projectUniqueName": "/home/andrew/Desktop/cstest/nocluee/ConsoleApp1/ConsoleApp1.csproj",
         "projectName": "ConsoleApp1",
-        "projectPath": "/home/andrew/Desktop/cs test/nocluee/ConsoleApp1/ConsoleApp1.csproj",
+        "projectPath": "/home/andrew/Desktop/cstest/nocluee/ConsoleApp1/ConsoleApp1.csproj",
         "packagesPath": "/home/andrew/.nuget/packages/",
-        "outputPath": "/home/andrew/Desktop/cs test/nocluee/ConsoleApp1/obj/",
+        "outputPath": "/home/andrew/Desktop/cstest/nocluee/ConsoleApp1/obj/",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "/home/andrew/.nuget/NuGet/NuGet.Config"

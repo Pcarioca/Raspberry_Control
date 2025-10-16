@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "XhpH6VS1DZE=",
+  "dgSpecHash": "Jkj+wLrpIcs=",
   "success": true,
-  "projectFilePath": "/home/andrew/Desktop/cs test/nocluee/ConsoleApp1/ConsoleApp1.csproj",
+  "projectFilePath": "/home/andrew/Desktop/cstest/nocluee/ConsoleApp1/ConsoleApp1.csproj",
   "expectedPackageFiles": [
     "/home/andrew/.nuget/packages/iot.device.bindings/4.0.1/iot.device.bindings.4.0.1.nupkg.sha512",
     "/home/andrew/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512",
