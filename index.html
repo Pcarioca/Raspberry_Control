@@ -217,6 +217,54 @@
             color: white;
             transform: translateY(-2px);
         }
+
+        .btn-fun {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            color: #4a154b;
+        }
+
+        .btn-fun:hover {
+            color: #fff;
+            background: linear-gradient(135deg, #ff758c 0%, #ff7eb3 100%);
+        }
+
+        .btn-led {
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+            color: #0a3d62;
+        }
+
+        .btn-led:hover {
+            color: #fff;
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .btn-combo {
+            background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+            color: #6b3e26;
+        }
+
+        .btn-combo:hover {
+            color: #fff;
+            background: linear-gradient(135deg, #f78ca0 0%, #f9748f 50%, #fd868c 100%);
+        }
+
+        .fun-badge {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 0.75em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .servo-routines,
+        .led-patterns,
+        .combo-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+        }
         
         @media (max-width: 500px) {
             .container {
@@ -243,11 +291,25 @@
             <div class='section-title'>
                 <span class='icon'>💡</span>
                 LED Control (GPIO 17)
+                <span class='fun-badge' style='margin-left:auto;'>Neon Zone</span>
             </div>
             <div class='led-controls'>
                 <button class='btn btn-on' onclick='controlLED(true)'>Turn ON</button>
                 <button class='btn btn-off' onclick='controlLED(false)'>Turn OFF</button>
                 <button class='btn btn-on' onclick='controlLEDintermittent(true)'>Flash ON</button>
+            </div>
+            <div class='slider-label' style='margin-top: 20px;'>
+                <span>LED Patterns:</span>
+            </div>
+            <div class='led-patterns'>
+                <button class='btn btn-led' onclick='ledStrobe()'>Strobe</button>
+                <button class='btn btn-led' onclick='ledPulse()'>Pulse</button>
+                <button class='btn btn-led' onclick='ledSos()'>SOS</button>
+                <button class='btn btn-led' onclick='ledBreathing()'>Breathing</button>
+                <button class='btn btn-led' onclick='ledBlinkBurst()'>Blink Burst</button>
+                <button class='btn btn-led' onclick='ledRandomSparkle()'>Random Sparkle</button>
+                <button class='btn btn-led' onclick='ledLongFlash()'>Long Flash</button>
+                <button class='btn btn-led' onclick='ledTwinkle()'>Twinkle</button>
             </div>
             <div id='led-status' class='status'></div>
         </div>
@@ -257,6 +319,7 @@
             <div class='section-title'>
                 <span class='icon'>🎛️</span>
                 Servo Motor Control (GPIO 18)
+                <span class='fun-badge' style='margin-left:auto;'>Motion Lab</span>
             </div>
             <div class='servo-controls'>
                 <div class='slider-container'>
@@ -279,9 +342,47 @@
                     <button class='btn-quick' onclick='setAngle(135)'>135°</button>
                     <button class='btn-quick' onclick='setAngle(180)'>180°</button>
                     <button class='btn-quick' onclick='sweepServo()'>Sweep</button>
+                    <button class='btn-quick' onclick='waveServo()'>Wave x5</button>
+                </div>
+                <div class='slider-label' style='margin-top: 20px;'>
+                    <span>Servo Routines:</span>
+                </div>
+                <div class='servo-routines'>
+                    <button class='btn-quick btn-fun' onclick='servoSmoothSweep()'>Smooth Sweep</button>
+                    <button class='btn-quick btn-fun' onclick='servoRandomDance()'>Random Dance</button>
+                    <button class='btn-quick btn-fun' onclick='servoJitterRoutine()'>Jitter</button>
+                    <button class='btn-quick btn-fun' onclick='servoPoseSequence()'>Pose Sequence</button>
+                    <button class='btn-quick btn-fun' onclick='servoMicroSweep()'>Micro Sweep</button>
+                    <button class='btn-quick btn-fun' onclick='servoSlowPan()'>Slow Pan</button>
+                    <button class='btn-quick btn-fun' onclick='servoDoubleWave()'>Double Wave</button>
+                    <button class='btn-quick btn-fun' onclick='servoFocusSweep()'>Focus Sweep</button>
+                    <button class='btn-quick btn-fun' onclick='servoSineRide()'>Sine Ride</button>
+                    <button class='btn-quick btn-fun' onclick='servoRandomPause()'>Random Pause</button>
+                    <button class='btn-quick btn-fun' onclick='servoEdgePulse()'>Edge Pulse</button>
+                    <button class='btn-quick btn-fun' onclick='servoDrumRoll()'>Drum Roll</button>
+                    <button class='btn-quick btn-fun' onclick='servoSpinCycle()'>Spin Cycle</button>
+                    <button class='btn-quick btn-fun' onclick='servoHeartbeatArc()'>Heartbeat Arc</button>
+                    <button class='btn-quick btn-fun' onclick='servoRainDrop()'>Raindrop</button>
                 </div>
                 <div id='servo-status' class='status'></div>
             </div>
+        </div>
+
+        <div class='control-section'>
+            <div class='section-title'>
+                Combo Routines
+                <span class='fun-badge' style='margin-left:auto;'>Showtime</span>
+            </div>
+            <div class='combo-controls'>
+                <button class='btn btn-combo' onclick='partyMode()'>Party Mode</button>
+                <button class='btn btn-combo' onclick='comboCountdown()'>Countdown Show</button>
+                <button class='btn btn-combo' onclick='comboAlarm()'>Alarm</button>
+                <button class='btn btn-combo' onclick='comboCelebration()'>Celebration</button>
+                <button class='btn btn-combo' onclick='comboPulseSync()'>Pulse Sync</button>
+                <button class='btn btn-combo' onclick='comboGuardSweep()'>Guard Sweep</button>
+                <button class='btn btn-combo' onclick='comboRandomShow()'>Random Show</button>
+            </div>
+            <div id='combo-status' class='status'></div>
         </div>
     </div>
     
@@ -300,10 +401,11 @@
             const statusDiv = document.getElementById('led-status');
             try {
                 const response = await fetch(turnOn ? '/gpio/on' : '/gpio/off');
-                if (response.ok) {
+                const data = await response.json().catch(() => ({}));
+                if (response.ok && data.ok) {
                     showStatus('led-status', `LED turned ${turnOn ? 'ON' : 'OFF'}!`, 'success');
                 } else {
-                    showStatus('led-status', 'Failed to control LED', 'error');
+                    showStatus('led-status', data.error || 'Failed to control LED', 'error');
                 }
             } catch (error) {
                 showStatus('led-status', 'Error: ' + error.message, 'error');
@@ -329,10 +431,12 @@
             try {
                 showStatus('servo-status', `Rotating to ${angle}°...`, 'success');
                 const response = await fetch(`/rotate/${angle}`);
-                if (response.ok) {
-                    showStatus('servo-status', `Servo rotated to ${angle}°!`, 'success');
+                const data = await response.json().catch(() => ({}));
+                if (response.ok && data.ok) {
+                    const reported = data.angle ?? angle;
+                    showStatus('servo-status', `Servo rotated to ${reported}°!`, 'success');
                 } else {
-                    showStatus('servo-status', 'Failed to rotate servo', 'error');
+                    showStatus('servo-status', data.error || 'Failed to rotate servo', 'error');
                 }
             } catch (error) {
                 showStatus('servo-status', 'Error: ' + error.message, 'error');
@@ -348,6 +452,155 @@
                 await new Promise(resolve => setTimeout(resolve, 300));
             }
             showStatus('servo-status', 'Sweep complete!', 'success');
+        }
+
+        async function waveServo() {
+            showStatus('servo-status', 'Waving servo...', 'success');
+            try {
+                const response = await fetch('/wave');
+                if (response.ok) {
+                    showStatus('servo-status', 'Wave sequence complete!', 'success');
+                } else {
+                    showStatus('servo-status', 'Failed to run wave sequence', 'error');
+                }
+            } catch (error) {
+                showStatus('servo-status', 'Error: ' + error.message, 'error');
+            }
+        }
+
+        async function servoSmoothSweep() {
+            await runSequence('/servo/smooth-sweep', 'servo-status', 'Smooth sweep in progress...', 'Smooth sweep complete!');
+        }
+
+        async function servoRandomDance() {
+            await runSequence('/servo/random-dance', 'servo-status', 'Random dance in progress...', 'Random dance complete!');
+        }
+
+        async function servoJitterRoutine() {
+            await runSequence('/servo/jitter', 'servo-status', 'Jitter routine in progress...', 'Jitter routine complete!');
+        }
+
+        async function servoPoseSequence() {
+            await runSequence('/servo/pose-sequence', 'servo-status', 'Pose sequence in progress...', 'Pose sequence complete!');
+        }
+
+        async function servoMicroSweep() {
+            await runSequence('/servo/micro-sweep', 'servo-status', 'Micro sweep in progress...', 'Micro sweep complete!');
+        }
+
+        async function servoSlowPan() {
+            await runSequence('/servo/slow-pan', 'servo-status', 'Slow pan in progress...', 'Slow pan complete!');
+        }
+
+        async function servoDoubleWave() {
+            await runSequence('/servo/double-wave', 'servo-status', 'Double wave in progress...', 'Double wave complete!');
+        }
+
+        async function servoFocusSweep() {
+            await runSequence('/servo/focus-sweep', 'servo-status', 'Focus sweep in progress...', 'Focus sweep complete!');
+        }
+
+        async function servoSineRide() {
+            await runSequence('/servo/sine-ride', 'servo-status', 'Sine ride in progress...', 'Sine ride complete!');
+        }
+
+        async function servoRandomPause() {
+            await runSequence('/servo/random-pause', 'servo-status', 'Random pause routine in progress...', 'Random pause routine complete!');
+        }
+
+        async function servoEdgePulse() {
+            await runSequence('/servo/edge-pulse', 'servo-status', 'Edge pulse in progress...', 'Edge pulse complete!');
+        }
+
+        async function servoDrumRoll() {
+            await runSequence('/servo/drum-roll', 'servo-status', 'Drum roll in progress...', 'Drum roll complete!');
+        }
+
+        async function servoSpinCycle() {
+            await runSequence('/servo/spin-cycle', 'servo-status', 'Spin cycle in progress...', 'Spin cycle complete!');
+        }
+
+        async function servoHeartbeatArc() {
+            await runSequence('/servo/heartbeat', 'servo-status', 'Heartbeat arc in progress...', 'Heartbeat arc complete!');
+        }
+
+        async function servoRainDrop() {
+            await runSequence('/servo/rain-drop', 'servo-status', 'Raindrop routine in progress...', 'Raindrop routine complete!');
+        }
+
+        async function ledStrobe() {
+            await runSequence('/led/strobe', 'led-status', 'LED strobe in progress...', 'LED strobe complete!');
+        }
+
+        async function ledPulse() {
+            await runSequence('/led/pulse', 'led-status', 'LED pulse in progress...', 'LED pulse complete!');
+        }
+
+        async function ledSos() {
+            await runSequence('/led/sos', 'led-status', 'Sending SOS...', 'SOS complete!');
+        }
+
+        async function ledBreathing() {
+            await runSequence('/led/breathing', 'led-status', 'LED breathing in progress...', 'LED breathing complete!');
+        }
+
+        async function ledBlinkBurst() {
+            await runSequence('/led/blink-burst', 'led-status', 'Blink burst in progress...', 'Blink burst complete!');
+        }
+
+        async function ledRandomSparkle() {
+            await runSequence('/led/random-sparkle', 'led-status', 'Random sparkle in progress...', 'Random sparkle complete!');
+        }
+
+        async function ledLongFlash() {
+            await runSequence('/led/long-flash', 'led-status', 'Long flash in progress...', 'Long flash complete!');
+        }
+
+        async function ledTwinkle() {
+            await runSequence('/led/twinkle', 'led-status', 'Twinkle sequence in progress...', 'Twinkle sequence complete!');
+        }
+
+        async function partyMode() {
+            await runSequence('/combo/party', 'combo-status', 'Party mode in progress...', 'Party mode complete!');
+        }
+
+        async function comboCountdown() {
+            await runSequence('/combo/countdown', 'combo-status', 'Countdown in progress...', 'Countdown complete!');
+        }
+
+        async function comboAlarm() {
+            await runSequence('/combo/alarm', 'combo-status', 'Alarm combo in progress...', 'Alarm combo complete!');
+        }
+
+        async function comboCelebration() {
+            await runSequence('/combo/celebration', 'combo-status', 'Celebration combo in progress...', 'Celebration combo complete!');
+        }
+
+        async function comboPulseSync() {
+            await runSequence('/combo/pulse-sync', 'combo-status', 'Pulse sync in progress...', 'Pulse sync complete!');
+        }
+
+        async function comboGuardSweep() {
+            await runSequence('/combo/guard-sweep', 'combo-status', 'Guard sweep in progress...', 'Guard sweep complete!');
+        }
+
+        async function comboRandomShow() {
+            await runSequence('/combo/random-show', 'combo-status', 'Random show in progress...', 'Random show complete!');
+        }
+
+        async function runSequence(endpoint, statusId, pendingMessage, successMessage) {
+            showStatus(statusId, pendingMessage, 'success');
+            try {
+                const response = await fetch(endpoint);
+                const data = await response.json().catch(() => ({}));
+                if (response.ok && (data.ok || data.routine || data.pattern)) {
+                    showStatus(statusId, successMessage, 'success');
+                } else {
+                    showStatus(statusId, data.error || 'Operation failed', 'error');
+                }
+            } catch (error) {
+                showStatus(statusId, 'Error: ' + error.message, 'error');
+            }
         }
         
         function showStatus(elementId, message, type) {
