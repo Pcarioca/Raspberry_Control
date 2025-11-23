@@ -1,4 +1,5 @@
-﻿using System;
+﻿/* LEGACY MONOLITH START (commented out by refactor)
+using System;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
@@ -18,346 +19,72 @@ var app = builder.Build();
 
 // Enable static file serving (e.g. from /static or wwwroot if added later)
 app.UseStaticFiles();
+using ConsoleApp1.Api;
+using ConsoleApp1.Hardware;
+using ConsoleApp1.Control;
+using ConsoleApp1.Models;
+using ConsoleApp1;
 
-const int ledPin = 17; // LED pin
-const int servoPin = 18; // GPIO18 = PWM channel 0 on Raspberry Pi
+var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
-// Routes
+// Dependency Injection registrations
+builder.Services.AddSingleton<HardwareLocks>();
+builder.Services.AddSingleton<ServoController>();
+builder.Services.AddSingleton<LedController>();
+builder.Services.AddSingleton<Mpu6050>();
+builder.Services.AddSingleton<PidController>(); // placeholder for future PID
+
+var app = builder.Build();
+app.UseStaticFiles();
+
+// Root route serving static HTML UI
 app.MapGet("/", () =>
 {
-    var htmlContent = HtmlLoader.LoadHtml("index.html");
-    return Results.Content(htmlContent, "text/html");
-});
+    using Microsoft.AspNetCore.Builder;
+    using Microsoft.Extensions.Hosting;
+    using ConsoleApp1.Api;
+    using ConsoleApp1.Hardware;
+    using ConsoleApp1.Control;
 
-// GPIO controller & LED init
-var gpioController = new GpioController();
-gpioController.OpenPin(ledPin, PinMode.Output);
-gpioController.Write(ledPin, PinValue.Low);
-Console.WriteLine($"GPIO pin {ledPin} initialized for LED output.");
-Console.WriteLine($"Servo control will initialize on first use (GPIO {servoPin}).");
+    var builder = WebApplication.CreateBuilder(args);
+    builder.WebHost.UseUrls("http://0.0.0.0:5000");
 
-SoftwarePwmChannel? servoPwm = null;
-ServoMotor? servo = null;
-SemaphoreSlim servoMoveLock = new(1, 1);
-SemaphoreSlim ledLock = new(1, 1);
-object servoInitLock = new();
-Random random = new();
-int lastServoAngle = 90; // default/rest angle
-bool ledOn = false; // track LED state
-DateTime lastLedPatternStart = DateTime.MinValue;
-TimeSpan ledPatternThrottleWindow = TimeSpan.FromMilliseconds(200);
+    // Dependency Injection registrations
+    builder.Services.AddSingleton<HardwareLocks>();
+    builder.Services.AddSingleton<ServoController>();
+    builder.Services.AddSingleton<LedController>();
+    builder.Services.AddSingleton<Mpu6050>();
+    builder.Services.AddSingleton<PidController>(); // placeholder for future PID
 
-bool ThrottleLedPattern()
-{
-    var now = DateTime.UtcNow;
-    if (now - lastLedPatternStart < ledPatternThrottleWindow)
-        return true;
-    lastLedPatternStart = now;
-    return false;
-}
+    var app = builder.Build();
+    app.UseStaticFiles();
 
-void EnsureServoInitialized()
-{
-    if (servo is null)
+    // Root route serving static HTML UI
+    app.MapGet("/", () =>
     {
-        lock (servoInitLock)
-        {
-            if (servo is null)
-            {
-                servoPwm = new SoftwarePwmChannel(
-                    pinNumber: servoPin,
-                    frequency: 50,
-                    dutyCycle: 0.05,
-                    usePrecisionTimer: true);
-                servoPwm.Start();
-
-                servo = new ServoMotor(
-                    pwmChannel: servoPwm,
-                    minimumPulseWidthMicroseconds: 500,
-                    maximumPulseWidthMicroseconds: 2500);
-                servo.Start();
-
-                Console.WriteLine($"Servo initialized on GPIO pin {servoPin} with software PWM.");
-            }
-        }
-    }
-}
-
-async Task WithServo(Func<ServoMotor, Task> action)
-{
-    await servoMoveLock.WaitAsync();
-    try
-    {
-        EnsureServoInitialized();
-        await action(servo!);
-    }
-    finally
-    {
-        servoMoveLock.Release();
-    }
-}
-
-async Task WithLed(Func<Task> action)
-{
-    await ledLock.WaitAsync();
-    try
-    {
-        await action();
-    }
-    finally
-    {
-        ledLock.Release();
-    }
-}
-
-async Task WithServoAndLed(Func<ServoMotor, Task> action)
-{
-    await servoMoveLock.WaitAsync();
-    await ledLock.WaitAsync();
-    try
-    {
-        EnsureServoInitialized();
-        await action(servo!);
-    }
-    finally
-    {
-        ledLock.Release();
-        servoMoveLock.Release();
-    }
-}
-
-// Dispose GPIO on shutdown
-app.Lifetime.ApplicationStopping.Register(() =>
-{
-    try
-    {
-        servo?.Dispose();
-        servo = null;
-
-        servoPwm?.Dispose();
-        servoPwm = null;
-
-        if (gpioController.IsPinOpen(ledPin))
-        {
-            gpioController.Write(ledPin, PinValue.Low);
-            gpioController.ClosePin(ledPin);
-        }
-
-        gpioController.Dispose();
-        servoMoveLock.Dispose();
-        ledLock.Dispose();
-    }
-    catch { /* ignore */ }
-});
-
-// Software PWM servo rotation backed by ServoMotor helper
-async Task rotateServo(int angle)
-{
-    angle = Math.Clamp(angle, 0, 180);
-
-    await WithServo(async s =>
-    {
-        s.WriteAngle(angle);
-        await Task.Delay(500);
+        var htmlContent = HtmlLoader.LoadHtml("index.html");
+        return Results.Content(htmlContent, "text/html");
     });
-    lastServoAngle = angle;
-}
 
-async Task waveServo()
-{
-    const int waveCycles = 5;
-    const int waveDelayMs = 90; // quick oscillation
-    await WithServo(async s =>
-    {
-        Console.WriteLine($"Starting servo wave: {waveCycles} cycles.");
+    // Map modular endpoint groups
+    app.MapServoEndpoints();
+    app.MapLedEndpoints();
+    app.MapComboEndpoints();
+    app.MapGyroEndpoints();
+    app.MapPidEndpoints();
 
-        s.WriteAngle(0);
-        await Task.Delay(waveDelayMs);
+    // Health and system state endpoints
+    app.MapGet("/health", (ServoController servo, LedController led, Mpu6050 imu) => Results.Json(new { status = "ok", servoReady = true, ledReady = true, imuReady = true }));
+    app.MapGet("/state", (ServoController servo, LedController led, Mpu6050 imu) => Results.Json(new { servoAngle = servo.CurrentAngle, ledOn = led.IsOn, imuRaw = imu.LastRaw, imuAngles = imu.LastAngles }));
 
-        for (int i = 0; i < waveCycles; i++)
-        {
-            s.WriteAngle(180);
-            await Task.Delay(waveDelayMs);
-            s.WriteAngle(0);
-            await Task.Delay(waveDelayMs);
-        }
+    // Numbers echo endpoints
+    app.MapGet("/numbers", (int one, int two, int three) => Results.Json(new { one, two, three }));
+    app.MapPost("/numbers", (NumbersPayload payload) => Results.Json(new { payload }));
 
-        Console.WriteLine("Servo wave complete.");
-    });
-}
+    app.Run();
 
-async Task servoSmoothSweep()
-{
-    await WithServo(async s =>
-    {
-        Console.WriteLine("Smooth sweep start.");
-        for (int angle = 0; angle <= 180; angle++)
-        {
-            s.WriteAngle(angle);
-            await Task.Delay(12);
-        }
-        for (int angle = 180; angle >= 0; angle--)
-        {
-            s.WriteAngle(angle);
-            await Task.Delay(12);
-        }
-        Console.WriteLine("Smooth sweep complete.");
-    });
-}
-
-async Task servoRandomDance()
-{
-    await WithServo(async s =>
-    {
-        Console.WriteLine("Random dance start.");
-        for (int i = 0; i < 15; i++)
-        {
-            int nextAngle = random.Next(0, 181);
-            s.WriteAngle(nextAngle);
-            await Task.Delay(random.Next(120, 260));
-        }
-        Console.WriteLine("Random dance complete.");
-    });
-}
-
-async Task servoJitter()
-{
-    await WithServo(async s =>
-    {
-        Console.WriteLine("Jitter routine start.");
-        int center = 90;
-        int[] offsets = { -25, 25, -40, 40, -15, 15, -5, 5, 0 };
-        for (int repeat = 0; repeat < 3; repeat++)
-        {
-            foreach (int offset in offsets)
-            {
-                int angle = Math.Clamp(center + offset, 0, 180);
-                s.WriteAngle(angle);
-                await Task.Delay(70);
-            }
-        }
-        Console.WriteLine("Jitter routine complete.");
-    });
-}
-
-async Task servoPoseSequence()
-{
-    await WithServo(async s =>
-    {
-        Console.WriteLine("Pose sequence start.");
-        int[] sequence = { 0, 60, 120, 180, 120, 60, 0, 90 };
-        foreach (int angle in sequence)
-        {
-            s.WriteAngle(angle);
-            await Task.Delay(220);
-        }
-        Console.WriteLine("Pose sequence complete.");
-    });
-}
-
-async Task servoMicroSweep()
-{
-    await WithServo(async s =>
-    {
-        Console.WriteLine("Micro sweep start.");
-        for (int cycle = 0; cycle < 3; cycle++)
-        {
-            for (int angle = 60; angle <= 120; angle += 2)
-            {
-                s.WriteAngle(angle);
-                await Task.Delay(25);
-            }
-            for (int angle = 120; angle >= 60; angle -= 2)
-            {
-                s.WriteAngle(angle);
-                await Task.Delay(25);
-            }
-        }
-        s.WriteAngle(90);
-        Console.WriteLine("Micro sweep complete.");
-    });
-}
-
-async Task servoSlowPan()
-{
-    await WithServo(async s =>
-    {
-        Console.WriteLine("Slow pan start.");
-        for (int angle = 0; angle <= 180; angle += 5)
-        {
-            s.WriteAngle(angle);
-            await Task.Delay(80);
-        }
-        Console.WriteLine("Slow pan complete.");
-    });
-}
-
-async Task servoDoubleWave()
-{
-    await WithServo(async s =>
-    {
-        Console.WriteLine("Double wave start.");
-        for (int cycle = 0; cycle < 2; cycle++)
-        {
-            for (int angle = 0; angle <= 180; angle += 10)
-            {
-                s.WriteAngle(angle);
-                await Task.Delay(40);
-            }
-            for (int angle = 180; angle >= 0; angle -= 10)
-            {
-                s.WriteAngle(angle);
-                await Task.Delay(40);
-            }
-        }
-        Console.WriteLine("Double wave complete.");
-    });
-}
-
-async Task servoFocusSweep()
-{
-    await WithServo(async s =>
-    {
-        Console.WriteLine("Focus sweep start.");
-        int center = 90;
-        for (int amplitude = 60; amplitude >= 15; amplitude -= 15)
-        {
-            s.WriteAngle(Math.Clamp(center - amplitude, 0, 180));
-            await Task.Delay(110);
-            s.WriteAngle(Math.Clamp(center + amplitude, 0, 180));
-            await Task.Delay(110);
-        }
-        s.WriteAngle(center);
-        Console.WriteLine("Focus sweep complete.");
-    });
-}
-
-async Task servoSineRide()
-{
-    await WithServo(async s =>
-    {
-        Console.WriteLine("Sine ride start.");
-        for (int degrees = 0; degrees <= 360; degrees += 15)
-        {
-            double radians = degrees * Math.PI / 180.0;
-            int angle = (int)Math.Clamp(90 + 90 * Math.Sin(radians), 0, 180);
-            s.WriteAngle(angle);
-            await Task.Delay(45);
-        }
-        for (int degrees = 360; degrees >= 0; degrees -= 15)
-        {
-            double radians = degrees * Math.PI / 180.0;
-            int angle = (int)Math.Clamp(90 + 90 * Math.Sin(radians), 0, 180);
-            s.WriteAngle(angle);
-            await Task.Delay(45);
-        }
-        s.WriteAngle(90);
-        Console.WriteLine("Sine ride complete.");
-    });
-}
-
-async Task servoRandomPause()
-{
+    public record NumbersPayload(int One, int Two, int Three);
     await WithServo(async s =>
     {
         Console.WriteLine("Random pause routine start.");
@@ -1102,6 +829,61 @@ app.MapPost("/numbers", (NumbersPayload payload) =>
     Console.WriteLine(output);
     return Results.Json(new { message = output, numbers = payload });
 });
+
+app.Run();
+
+public record NumbersPayload(int One, int Two, int Three);
+LEGACY MONOLITH END */
+
+// Refactored minimal composition root below
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Hosting;
+using ConsoleApp1.Api;
+using ConsoleApp1.Hardware;
+using ConsoleApp1.Control;
+using ConsoleApp1; // HtmlLoader
+
+var builder = WebApplication.CreateBuilder(args);
+builder.WebHost.UseUrls("http://0.0.0.0:5000");
+
+// Configure JSON serialization to use camelCase property names (matches JavaScript conventions)
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNamingPolicy = System.Text.Json.JsonNamingPolicy.CamelCase;
+});
+
+builder.Services.AddSingleton<HardwareLocks>();
+builder.Services.AddSingleton<ServoController>();
+builder.Services.AddSingleton<LedController>();
+builder.Services.AddSingleton<Mpu6050>();
+builder.Services.AddSingleton<PidController>();
+
+var app = builder.Build();
+app.UseStaticFiles();
+
+app.MapGet("/", () =>
+{
+    var html = HtmlLoader.LoadHtml("index.html");
+    return Results.Content(html, "text/html");
+});
+
+app.MapGet("/gyro/visualizer", () =>
+{
+    var html = HtmlLoader.LoadHtml("gyro-visualizer.html");
+    return Results.Content(html, "text/html");
+});
+
+app.MapServoEndpoints();
+app.MapLedEndpoints();
+app.MapComboEndpoints();
+app.MapGyroEndpoints();
+app.MapPidEndpoints();
+
+app.MapGet("/health", (ServoController servo, LedController led, Mpu6050 imu) => Results.Json(new { status = "ok", servoReady = true, ledReady = true, imuReady = true }));
+app.MapGet("/state", (ServoController servo, LedController led, Mpu6050 imu) => Results.Json(new { servoAngle = servo.CurrentAngle, ledOn = led.IsOn, imuRaw = imu.LastRaw, imuAngles = imu.LastAngles }));
+
+app.MapGet("/numbers", (int one, int two, int three) => Results.Json(new { one, two, three }));
+app.MapPost("/numbers", (NumbersPayload payload) => Results.Json(new { payload }));
 
 app.Run();
 

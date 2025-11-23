@@ -294,22 +294,22 @@
                 <span class='fun-badge' style='margin-left:auto;'>Neon Zone</span>
             </div>
             <div class='led-controls'>
-                <button class='btn btn-on' onclick='controlLED(true)'>Turn ON</button>
-                <button class='btn btn-off' onclick='controlLED(false)'>Turn OFF</button>
-                <button class='btn btn-on' onclick='controlLEDintermittent(true)'>Flash ON</button>
+                <button class='btn btn-on' onclick='controlLED(true)' title='Turns the LED on continuously'>Turn ON</button>
+                <button class='btn btn-off' onclick='controlLED(false)' title='Turns the LED off completely'>Turn OFF</button>
+                <button class='btn btn-on' onclick='controlLEDintermittent(true)' title='Flashes the LED 10 times rapidly'>Flash ON</button>
             </div>
             <div class='slider-label' style='margin-top: 20px;'>
                 <span>LED Patterns:</span>
             </div>
             <div class='led-patterns'>
-                <button class='btn btn-led' onclick='ledStrobe()'>Strobe</button>
-                <button class='btn btn-led' onclick='ledPulse()'>Pulse</button>
-                <button class='btn btn-led' onclick='ledSos()'>SOS</button>
-                <button class='btn btn-led' onclick='ledBreathing()'>Breathing</button>
-                <button class='btn btn-led' onclick='ledBlinkBurst()'>Blink Burst</button>
-                <button class='btn btn-led' onclick='ledRandomSparkle()'>Random Sparkle</button>
-                <button class='btn btn-led' onclick='ledLongFlash()'>Long Flash</button>
-                <button class='btn btn-led' onclick='ledTwinkle()'>Twinkle</button>
+                <button class='btn btn-led' onclick='ledStrobe()' title='Rapid on/off flashing for 1 second'>Strobe</button>
+                <button class='btn btn-led' onclick='ledPulse()' title='Slow pulsing pattern: 3 cycles of fade in/out'>Pulse</button>
+                <button class='btn btn-led' onclick='ledSos()' title='Morse code SOS signal: three short, three long, three short'>SOS</button>
+                <button class='btn btn-led' onclick='ledBreathing()' title='Smooth breathing effect with gradual brightness changes'>Breathing</button>
+                <button class='btn btn-led' onclick='ledBlinkBurst()' title='Quick burst of 5 blinks in succession'>Blink Burst</button>
+                <button class='btn btn-led' onclick='ledRandomSparkle()' title='Random twinkling pattern with varying delays'>Random Sparkle</button>
+                <button class='btn btn-led' onclick='ledLongFlash()' title='Single long flash lasting 1 second'>Long Flash</button>
+                <button class='btn btn-led' onclick='ledTwinkle()' title='Series of short sparkles with random timing'>Twinkle</button>
             </div>
             <div id='led-status' class='status'></div>
         </div>
@@ -336,33 +336,33 @@
                     <span>Quick Positions:</span>
                 </div>
                 <div class='quick-angles'>
-                    <button class='btn-quick' onclick='setAngle(0)'>0°</button>
-                    <button class='btn-quick' onclick='setAngle(45)'>45°</button>
-                    <button class='btn-quick' onclick='setAngle(90)'>90°</button>
-                    <button class='btn-quick' onclick='setAngle(135)'>135°</button>
-                    <button class='btn-quick' onclick='setAngle(180)'>180°</button>
-                    <button class='btn-quick' onclick='sweepServo()'>Sweep</button>
-                    <button class='btn-quick' onclick='waveServo()'>Wave x5</button>
+                    <button class='btn-quick' onclick='setAngle(0)' title='Move servo to 0 degrees (far left position)'>0°</button>
+                    <button class='btn-quick' onclick='setAngle(45)' title='Move servo to 45 degrees (left-center position)'>45°</button>
+                    <button class='btn-quick' onclick='setAngle(90)' title='Move servo to 90 degrees (center position)'>90°</button>
+                    <button class='btn-quick' onclick='setAngle(135)' title='Move servo to 135 degrees (right-center position)'>135°</button>
+                    <button class='btn-quick' onclick='setAngle(180)' title='Move servo to 180 degrees (far right position)'>180°</button>
+                    <button class='btn-quick' onclick='sweepServo()' title='Automatically sweep from 0 to 180 degrees in steps'>Sweep</button>
+                    <button class='btn-quick' onclick='waveServo()' title='Wave pattern: servo moves back and forth 5 times'>Wave x5</button>
                 </div>
                 <div class='slider-label' style='margin-top: 20px;'>
                     <span>Servo Routines:</span>
                 </div>
                 <div class='servo-routines'>
-                    <button class='btn-quick btn-fun' onclick='servoSmoothSweep()'>Smooth Sweep</button>
-                    <button class='btn-quick btn-fun' onclick='servoRandomDance()'>Random Dance</button>
-                    <button class='btn-quick btn-fun' onclick='servoJitterRoutine()'>Jitter</button>
-                    <button class='btn-quick btn-fun' onclick='servoPoseSequence()'>Pose Sequence</button>
-                    <button class='btn-quick btn-fun' onclick='servoMicroSweep()'>Micro Sweep</button>
-                    <button class='btn-quick btn-fun' onclick='servoSlowPan()'>Slow Pan</button>
-                    <button class='btn-quick btn-fun' onclick='servoDoubleWave()'>Double Wave</button>
-                    <button class='btn-quick btn-fun' onclick='servoFocusSweep()'>Focus Sweep</button>
-                    <button class='btn-quick btn-fun' onclick='servoSineRide()'>Sine Ride</button>
-                    <button class='btn-quick btn-fun' onclick='servoRandomPause()'>Random Pause</button>
-                    <button class='btn-quick btn-fun' onclick='servoEdgePulse()'>Edge Pulse</button>
-                    <button class='btn-quick btn-fun' onclick='servoDrumRoll()'>Drum Roll</button>
-                    <button class='btn-quick btn-fun' onclick='servoSpinCycle()'>Spin Cycle</button>
-                    <button class='btn-quick btn-fun' onclick='servoHeartbeatArc()'>Heartbeat Arc</button>
-                    <button class='btn-quick btn-fun' onclick='servoRainDrop()'>Raindrop</button>
+                    <button class='btn-quick btn-fun' onclick='servoSmoothSweep()' title='Gentle sweep across full range with smooth transitions'>Smooth Sweep</button>
+                    <button class='btn-quick btn-fun' onclick='servoRandomDance()' title='Random movement sequence with unpredictable angles'>Random Dance</button>
+                    <button class='btn-quick btn-fun' onclick='servoJitterRoutine()' title='Quick jittery movements around center position'>Jitter</button>
+                    <button class='btn-quick btn-fun' onclick='servoPoseSequence()' title='Sequence of distinct poses held briefly at each position'>Pose Sequence</button>
+                    <button class='btn-quick btn-fun' onclick='servoMicroSweep()' title='Small sweeping motions within a narrow range'>Micro Sweep</button>
+                    <button class='btn-quick btn-fun' onclick='servoSlowPan()' title='Very slow panning motion across the full range'>Slow Pan</button>
+                    <button class='btn-quick btn-fun' onclick='servoDoubleWave()' title='Two complete wave cycles back and forth'>Double Wave</button>
+                    <button class='btn-quick btn-fun' onclick='servoFocusSweep()' title='Sweep that pauses at key focus points'>Focus Sweep</button>
+                    <button class='btn-quick btn-fun' onclick='servoSineRide()' title='Smooth sine wave motion for natural-looking movement'>Sine Ride</button>
+                    <button class='btn-quick btn-fun' onclick='servoRandomPause()' title='Random movements with varying pause durations'>Random Pause</button>
+                    <button class='btn-quick btn-fun' onclick='servoEdgePulse()' title='Pulses at the extreme edges (0 and 180 degrees)'>Edge Pulse</button>
+                    <button class='btn-quick btn-fun' onclick='servoDrumRoll()' title='Rapid drumroll-like vibration effect'>Drum Roll</button>
+                    <button class='btn-quick btn-fun' onclick='servoSpinCycle()' title='Continuous circular motion pattern'>Spin Cycle</button>
+                    <button class='btn-quick btn-fun' onclick='servoHeartbeatArc()' title='Heartbeat rhythm pattern with pulse-like arcs'>Heartbeat Arc</button>
+                    <button class='btn-quick btn-fun' onclick='servoRainDrop()' title='Random drop patterns like falling raindrops'>Raindrop</button>
                 </div>
                 <div id='servo-status' class='status'></div>
             </div>
@@ -374,15 +374,64 @@
                 <span class='fun-badge' style='margin-left:auto;'>Showtime</span>
             </div>
             <div class='combo-controls'>
-                <button class='btn btn-combo' onclick='partyMode()'>Party Mode</button>
-                <button class='btn btn-combo' onclick='comboCountdown()'>Countdown Show</button>
-                <button class='btn btn-combo' onclick='comboAlarm()'>Alarm</button>
-                <button class='btn btn-combo' onclick='comboCelebration()'>Celebration</button>
-                <button class='btn btn-combo' onclick='comboPulseSync()'>Pulse Sync</button>
-                <button class='btn btn-combo' onclick='comboGuardSweep()'>Guard Sweep</button>
-                <button class='btn btn-combo' onclick='comboRandomShow()'>Random Show</button>
+                <button class='btn btn-combo' onclick='partyMode()' title='Wild party mode with synchronized servo and LED effects'>Party Mode</button>
+                <button class='btn btn-combo' onclick='comboCountdown()' title='Countdown sequence with LED blinks and servo movement'>Countdown Show</button>
+                <button class='btn btn-combo' onclick='comboAlarm()' title='Alarm pattern with urgent servo sweeps and LED flashing'>Alarm</button>
+                <button class='btn btn-combo' onclick='comboCelebration()' title='Celebratory pattern with energetic movements and lights'>Celebration</button>
+                <button class='btn btn-combo' onclick='comboPulseSync()' title='Synchronized pulsing of servo and LED in harmony'>Pulse Sync</button>
+                <button class='btn btn-combo' onclick='comboGuardSweep()' title='Security guard sweep pattern with LED indicator'>Guard Sweep</button>
+                <button class='btn btn-combo' onclick='comboRandomShow()' title='Random combination of servo and LED effects'>Random Show</button>
             </div>
             <div id='combo-status' class='status'></div>
+        </div>
+
+        <!-- Gyro Playground Section -->
+        <div class='control-section'>
+            <div class='section-title'>🌀 Gyro Playground (MPU-6050)</div>
+            <div style='margin-bottom:10px; color:#555; font-size:0.85em;'>Live motion-powered interactions. Each button calls a backend routine using current sensor data.</div>
+            <div style='margin-bottom:15px;'>
+                <a href='/gyro/visualizer' style='display:inline-block; padding:10px 20px; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; text-decoration:none; border-radius:8px; font-weight:600;'>📊 Open Real-Time Visualizer</a>
+            </div>
+            <div class='gyro-grid' style='display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:10px;'>
+                <button class='btn btn-fun' onclick="gyroRaw()" title='Get raw accelerometer and gyroscope readings from MPU-6050'>Raw Data</button>
+                <button class='btn btn-fun' onclick="gyroAngles()" title='Get computed pitch and roll angles from sensor data'>Angles</button>
+                <button class='btn btn-fun' onclick="gyroMagnitude()" title='Calculate gyroscope vector magnitude (rotation intensity)'>Magnitude</button>
+                <button class='btn btn-fun' onclick="gyroFreefall()" title='Check if device is in freefall (all axes near 0g)'>Freefall?</button>
+                <button class='btn btn-fun' onclick="gyroStability()" title='Check if device is stable (low gyro movement)'>Stability?</button>
+                <button class='btn btn-fun' onclick="gyroUpdateAngles()" title='Force a fresh read and update of angle calculations'>Update Angles</button>
+                <button class='btn btn-fun' onclick="fun('tilt-servo-map')" title='Map tilt angle to servo position in real-time'>Tilt→Servo Map</button>
+                <button class='btn btn-fun' onclick="fun('shake-led-strobe')" title='Trigger LED strobe when device is shaken'>Shake Strobe</button>
+                <button class='btn btn-fun' onclick="fun('level-guard')" title='LED warns when device is not level'>Level Guard</button>
+                <button class='btn btn-fun' onclick="fun('freefall-alarm')" title='Alarm activates when freefall is detected'>Freefall Alarm</button>
+                <button class='btn btn-fun' onclick="fun('tilt-sweep')" title='Servo sweeps based on current tilt angle'>Tilt Sweep</button>
+                <button class='btn btn-fun' onclick="fun('orientation-wave')" title='Servo waves in response to device orientation'>Orientation Wave</button>
+                <button class='btn btn-fun' onclick="fun('shake-record-start')" title='Start recording shake pattern (placeholder)'>Record Start</button>
+                <button class='btn btn-fun' onclick="fun('shake-record-stop')" title='Stop recording shake pattern (placeholder)'>Record Stop</button>
+                <button class='btn btn-fun' onclick="fun('shake-replay')" title='Replay recorded shake pattern with servo'>Shake Replay</button>
+                <button class='btn btn-fun' onclick="fun('gyro-magnitude-blink')" title='LED blinks faster with higher rotation speed'>Magnitude Blink</button>
+                <button class='btn btn-fun' onclick="fun('pitch-roll-pan')" title='Servo pans based on pitch angle'>Pitch Pan</button>
+                <button class='btn btn-fun' onclick="fun('yaw-spin-cycle')" title='Servo spins in sync with yaw rotation'>Yaw Spin</button>
+                <button class='btn btn-fun' onclick="fun('stable-hold-game')" title='Challenge: keep device stable to win'>Stable Hold</button>
+                <button class='btn btn-fun' onclick="fun('dont-shake-game')" title='Challenge: avoid shaking the device'>Don't Shake</button>
+                <button class='btn btn-fun' onclick="fun('balance-challenge')" title='Test your balance: keep angles within range'>Balance Test</button>
+                <button class='btn btn-fun' onclick="fun('noise-react')" title='React to motion with random servo patterns'>Noise React</button>
+                <button class='btn btn-fun' onclick="fun('motion-random-combo')" title='Random combination triggered by motion detection'>Motion Combo</button>
+                <button class='btn btn-fun' onclick="fun('pitch-pulse-led')" title='LED pulse intensity varies with pitch angle'>Pitch Pulse LED</button>
+                <button class='btn btn-fun' onclick="fun('roll-focus-servo')" title='Servo focus sweep controlled by roll angle'>Roll Focus Sweep</button>
+                <button class='btn btn-fun' onclick="fun('angle-double-wave')" title='Double wave pattern scaled by tilt angle'>Angle Double Wave</button>
+                <button class='btn btn-fun' onclick="fun('impact-flash')" title='LED flashes on sudden impact or acceleration spike'>Impact Flash</button>
+                <button class='btn btn-fun' onclick="fun('drift-check')" title='Monitor gyroscope drift over time'>Drift Check</button>
+                <button class='btn btn-fun' onclick="fun('rest-center')" title='Return servo to center (90°) rest position'>Rest Center</button>
+                <button class='btn btn-fun' onclick="fun('tilt-micro-adjust')" title='Fine servo adjustments based on micro-tilts'>Tilt Micro Adjust</button>
+                <button class='btn btn-fun' onclick="fun('rapid-twist')" title='Detect and respond to rapid twisting motions'>Rapid Twist</button>
+                <button class='btn btn-fun' onclick="fun('slow-pan-gyro')" title='Slow servo pan controlled by gyro data'>Slow Pan Gyro</button>
+                <button class='btn btn-fun' onclick="fun('breathing-sync')" title='LED breathing pattern synced to motion rhythm'>Breathing Sync</button>
+                <button class='btn btn-fun' onclick="fun('heartbeat-sync')" title='Heartbeat pattern synchronized with tilt changes'>Heartbeat Sync</button>
+                <button class='btn btn-fun' onclick="fun('edge-pulse-gyro')" title='Edge pulses triggered by rotation magnitude'>Edge Pulse Gyro</button>
+                <button class='btn btn-fun' onclick="fun('rain-drop-gyro')" title='Raindrop pattern influenced by gyro readings'>Rain Drop Gyro</button>
+                <button class='btn btn-fun' onclick="fun('sine-ride-gyro')" title='Sine wave movement modulated by gyroscope'>Sine Ride Gyro</button>
+            </div>
+            <div id='gyro-status' class='status'></div>
         </div>
     </div>
     
@@ -610,6 +659,30 @@
             setTimeout(() => {
                 statusDiv.classList.remove('show');
             }, 3000);
+        }
+
+        // ===== Gyro Playground Functions =====
+        async function gyroRaw(){ await simpleGyroFetch('/gyro/raw','gyro-status','Raw'); }
+        async function gyroAngles(){ await simpleGyroFetch('/gyro/angles','gyro-status','Angles'); }
+        async function gyroMagnitude(){ await simpleGyroFetch('/gyro/magnitude','gyro-status','Magnitude'); }
+        async function gyroFreefall(){ await simpleGyroFetch('/gyro/freefall','gyro-status','Freefall'); }
+        async function gyroStability(){ await simpleGyroFetch('/gyro/stabilityCheck','gyro-status','Stability'); }
+        async function gyroUpdateAngles(){ await simpleGyroFetch('/gyro/update','gyro-status','Update'); }
+        async function fun(name){ await simpleGyroFetch(`/gyro/fun/${name}`,'gyro-status',name); }
+
+        async function simpleGyroFetch(endpoint, statusId, label){
+            showStatus(statusId, `${label} request...`, 'success');
+            try {
+                const resp = await fetch(endpoint);
+                const data = await resp.json().catch(()=>({}));
+                if(resp.ok && (data.ok !== false)){
+                    showStatus(statusId, `${label} ✓`, 'success');
+                } else {
+                    showStatus(statusId, data.error || `${label} failed`, 'error');
+                }
+            } catch(err){
+                showStatus(statusId, `${label} error: ${err.message}`, 'error');
+            }
         }
     </script>
 </body>

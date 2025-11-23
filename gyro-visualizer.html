@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>MPU-6050 Gyro & Accel Visualizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 0.9em;
+        }
+        
+        #status {
+            text-align: center;
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            font-weight: 500;
+        }
+        
+        #status.error {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        #status.success {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        #gyro-bars-container {
+            margin: 20px 0;
+        }
+        
+        .axis-bar {
+            margin-bottom: 30px;
+        }
+        
+        .axis-label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            font-size: 1.1em;
+            color: #333;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .axis-name {
+            color: #667eea;
+        }
+        
+        .value {
+            font-size: 0.95em;
+            color: #666;
+            font-weight: normal;
+        }
+        
+        .bar {
+            width: 100%;
+            height: 30px;
+            background: #eee;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .bar::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #999;
+            z-index: 1;
+        }
+        
+        .fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            transition: width 0.1s linear;
+            position: relative;
+        }
+        
+        .section-divider {
+            margin: 40px 0 30px 0;
+            border-top: 2px solid #eee;
+            padding-top: 30px;
+        }
+        
+        .section-title {
+            font-size: 1.3em;
+            color: #667eea;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+        
+        .data-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .data-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+        
+        .data-label {
+            font-size: 0.85em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .data-value {
+            font-size: 1.3em;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .btn-back {
+            display: inline-block;
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-top: 20px;
+            font-weight: 600;
+            transition: transform 0.2s;
+        }
+        
+        .btn-back:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .update-rate {
+            text-align: center;
+            color: #999;
+            font-size: 0.8em;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class='container'>
+        <h1>🌀 MPU-6050 Gyro & Accel Visualizer</h1>
+        <div class='subtitle'>Real-time sensor data visualization</div>
+        
+        <div id='status'></div>
+
+        <div id='gyro-bars-container'>
+            <div class='axis-bar'>
+                <div class='axis-label'>
+                    <span class='axis-name'>X Axis (Accelerometer)</span>
+                    <span class='value' id='value-x'>0.00 g</span>
+                </div>
+                <div class='bar'><div class='fill' id='bar-x'></div></div>
+            </div>
+
+            <div class='axis-bar'>
+                <div class='axis-label'>
+                    <span class='axis-name'>Y Axis (Accelerometer)</span>
+                    <span class='value' id='value-y'>0.00 g</span>
+                </div>
+                <div class='bar'><div class='fill' id='bar-y'></div></div>
+            </div>
+
+            <div class='axis-bar'>
+                <div class='axis-label'>
+                    <span class='axis-name'>Z Axis (Accelerometer)</span>
+                    <span class='value' id='value-z'>0.00 g</span>
+                </div>
+                <div class='bar'><div class='fill' id='bar-z'></div></div>
+            </div>
+        </div>
+
+        <div class='section-divider'>
+            <div class='section-title'>Gyroscope Data</div>
+            <div class='data-grid'>
+                <div class='data-item'>
+                    <div class='data-label'>Rotation X</div>
+                    <div class='data-value' id='gyro-x'>0.0°/s</div>
+                </div>
+                <div class='data-item'>
+                    <div class='data-label'>Rotation Y</div>
+                    <div class='data-value' id='gyro-y'>0.0°/s</div>
+                </div>
+                <div class='data-item'>
+                    <div class='data-label'>Rotation Z</div>
+                    <div class='data-value' id='gyro-z'>0.0°/s</div>
+                </div>
+            </div>
+        </div>
+
+        <div class='section-divider'>
+            <div class='section-title'>Computed Angles</div>
+            <div class='data-grid'>
+                <div class='data-item'>
+                    <div class='data-label'>Pitch</div>
+                    <div class='data-value' id='angle-pitch'>0.0°</div>
+                </div>
+                <div class='data-item'>
+                    <div class='data-label'>Roll</div>
+                    <div class='data-value' id='angle-roll'>0.0°</div>
+                </div>
+                <div class='data-item'>
+                    <div class='data-label'>Magnitude</div>
+                    <div class='data-value' id='magnitude'>0.0°/s</div>
+                </div>
+            </div>
+        </div>
+
+        <div style='text-align: center;'>
+            <a href='/' class='btn-back'>← Back to Control Panel</a>
+        </div>
+
+        <div class='update-rate'>Updating every 150ms</div>
+    </div>
+
+    <script>
+        const MIN_G = -2.0;
+        const MAX_G = 2.0;
+
+        function mapToPercent(value) {
+            const clamped = Math.max(MIN_G, Math.min(MAX_G, value));
+            return ((clamped - MIN_G) / (MAX_G - MIN_G)) * 100;
+        }
+
+        function showStatus(message, isError = false) {
+            const status = document.getElementById('status');
+            status.textContent = message;
+            status.className = isError ? 'error' : 'success';
+        }
+
+        async function fetchData() {
+            try {
+                // Fetch raw sensor data
+                const rawResp = await fetch('/gyro/raw');
+                if (!rawResp.ok) {
+                    const errorText = await rawResp.text();
+                    showStatus('Sensor error: ' + rawResp.status + ' - Check sensor connection', true);
+                    return;
+                }
+                
+                const rawData = await rawResp.json();
+                
+                // Handle both lowercase and capitalized property names
+                const ax = rawData.ax ?? rawData.Ax ?? 0;
+                const ay = rawData.ay ?? rawData.Ay ?? 0;
+                const az = rawData.az ?? rawData.Az ?? 0;
+                const gx = rawData.gx ?? rawData.Gx ?? 0;
+                const gy = rawData.gy ?? rawData.Gy ?? 0;
+                const gz = rawData.gz ?? rawData.Gz ?? 0;
+
+                // Update accelerometer bars
+                const px = mapToPercent(ax);
+                const py = mapToPercent(ay);
+                const pz = mapToPercent(az);
+
+                document.getElementById('bar-x').style.width = px + '%';
+                document.getElementById('bar-y').style.width = py + '%';
+                document.getElementById('bar-z').style.width = pz + '%';
+
+                document.getElementById('value-x').textContent = ax.toFixed(2) + ' g';
+                document.getElementById('value-y').textContent = ay.toFixed(2) + ' g';
+                document.getElementById('value-z').textContent = az.toFixed(2) + ' g';
+
+                // Update gyroscope data
+                document.getElementById('gyro-x').textContent = gx.toFixed(1) + '°/s';
+                document.getElementById('gyro-y').textContent = gy.toFixed(1) + '°/s';
+                document.getElementById('gyro-z').textContent = gz.toFixed(1) + '°/s';
+
+                // Fetch angles
+                const anglesResp = await fetch('/gyro/angles');
+                if (anglesResp.ok) {
+                    const anglesData = await anglesResp.json();
+                    const pitch = anglesData.pitch ?? anglesData.Pitch ?? 0;
+                    const roll = anglesData.roll ?? anglesData.Roll ?? 0;
+                    
+                    document.getElementById('angle-pitch').textContent = pitch.toFixed(1) + '°';
+                    document.getElementById('angle-roll').textContent = roll.toFixed(1) + '°';
+                }
+
+                // Fetch magnitude
+                const magResp = await fetch('/gyro/magnitude');
+                if (magResp.ok) {
+                    const magData = await magResp.json();
+                    const mag = magData.magnitude ?? magData.Magnitude ?? 0;
+                    document.getElementById('magnitude').textContent = mag.toFixed(1) + '°/s';
+                }
+
+                showStatus('✓ Sensor reading successfully', false);
+            } catch (err) {
+                showStatus('Failed to fetch sensor data: ' + err.message, true);
+            }
+        }
+
+        // Update every 150ms
+        setInterval(fetchData, 150);
+        
+        // Initial fetch
+        fetchData();
+    </script>
+</body>
+</html>
